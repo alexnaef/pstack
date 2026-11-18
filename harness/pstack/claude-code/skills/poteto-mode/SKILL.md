@@ -8,8 +8,6 @@ color: yellow
 
 # Poteto mode
 
-In Claude Code, read [the Claude Code adapter](../../docs/harness/claude-code.md) once per session before you follow this skill. It maps the Cursor names in pstack skills to Claude Code.
-
 This chat owns the task. Load [bundled skills](../) by their path relative to this file, `../<name>/SKILL.md`, when there is no native skill invocation. Follow the current session's instructions and the target repository's rules throughout.
 
 ## Non-negotiables
@@ -18,7 +16,7 @@ The [Principles](#principles) section below grounds every trigger. In your reply
 
 The remaining triggers live only here:
 
-- First message → restate the user's goal and the smallest change that meets it, then proceed. Open each subagent brief, PR `## Why`, and final report with the goal.
+- First message → restate the user's goal and the smallest change that meets it, then proceed. Open each subagent brief and final report with the goal.
 - Starting a delegate → pass the relevant instructions, authorized scope, file paths, and success check. See [Subagents](#subagents).
 - A fork you could settle by running something → prototype it per [`playbooks/prototype.md`](playbooks/prototype.md) instead of asking.
 - Code → name the data shape first. Across a function boundary → [**architect**](../architect/SKILL.md). Fan-out → [**swarm**](../swarm/SKILL.md). Bakeoff → [**arena**](../arena/SKILL.md). Contested design → [**interrogate**](../interrogate/SKILL.md).
@@ -26,7 +24,6 @@ The remaining triggers live only here:
 - Before committing through an authorized workflow → review the diff for unrelated churn, redundant code, and misleading comments. Before review → [**no-comments**](../no-comments/SKILL.md), within the scope of the request.
 - Verifying UI, IDE, or CLI behavior → run the real user flow with an available browser, desktop, or terminal tool. If it cannot run, state what you did verify and what remains unverified.
 - A number you measured → [**benchmark-checklist**](../benchmark-checklist/SKILL.md).
-- PR status → the read-only mode of [**Babysit**](playbooks/babysit.md). When the user requests landing a stack → [**Shipping**](playbooks/shipping.md), subject to the repository's release rules.
 - Bot review comments → judge each on its merits.
 - Long or unattended work → [**show-me-your-work**](../show-me-your-work/SKILL.md).
 
@@ -75,9 +72,9 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Autonomy
 
-**Default delivery is local.** For a plain request to fix a bug or implement a change, finish with a verified local patch and its evidence. Skip PR opening, pushes, merges, deployments, and writes to external apps unless already authorized for the task. Run the [**Opening a PR**](playbooks/opening-a-pr.md) playbook when opening a PR is in scope.
+**Delivery is local.** Finish with a verified local patch and its evidence. Use [Prepare a local review](playbooks/prepare-review.md) when the user wants a review handoff.
 
-**Keep the delivery scope across steps.** These rules apply to every routed playbook, skill, script, and delegate. If a step assumes a PR or another external write, skip that step and finish the authorized local work. A request for the status of an existing PR permits reading it. A request to fix that PR covers the changes the user asks for and any repository workflow already authorized.
+**Keep the delivery scope across steps.** Use local tools, files, and worktrees throughout. Treat an external review or release request as separate from this skill's local preparation.
 
 **Unattended work stays within its authorization.** "Run until done" lets the agent continue within the agreed scope. Follow applicable approvals for irreversible operations and explicit authorization requirements for sending messages.
 
@@ -89,7 +86,7 @@ Delegate when the current session allows it and the work benefits from a separat
 
 Use the host's available delegation tools. Give each delegate the exact files or inputs, the task goal, a measurable finish condition, and the delivery scope from [Autonomy](#autonomy). Pass the paths to this skill and [`worker.md`](worker.md) if the delegate can read them. State the delivery scope in the kickoff so it overrides any broader delivery step in `worker.md`. Use separate paths or worktrees for concurrent edits when the host supports them.
 
-Use the session's default model unless the user has picked a model supported by the host for this role. Treat hard-coded model examples in downstream steps as examples. If a tool rejects a configured model, use the host default. Say when reviews share a model or when independent review was unavailable.
+Read [local runners](references/local-runners.md). Use the session model or a configured Codex or Claude runner, subject to the host's permissions. Say which runner actually ran and report gaps in independent verification.
 
 You own every subagent's work. Read its diff and confirm the evidence yourself.
 
@@ -115,13 +112,9 @@ Match the task to a playbook and open its steps in [`playbooks/`](playbooks/) at
 - [Visual parity](playbooks/visual-parity.md)
 - [Authoring a skill](playbooks/authoring-a-skill.md)
 - [Eval](playbooks/eval.md)
-- [Babysit](playbooks/babysit.md)
-- [Shipping](playbooks/shipping.md)
 - [Autonomous run](playbooks/autonomous-run.md)
-- [Autopilot-full](playbooks/autopilot-full.md)
-- [Autopilot-stack](playbooks/autopilot-stack.md)
 - [Session pickup](playbooks/session-pickup.md)
 - [Pause safely](playbooks/pause-safely.md)
 - [Multi-phase plan](playbooks/multi-phase-plan.md)
 - [Worktree cleanup](playbooks/worktree-cleanup.md)
-- [Opening a PR](playbooks/opening-a-pr.md)
+- [Prepare a local review](playbooks/prepare-review.md)

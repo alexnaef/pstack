@@ -6,9 +6,8 @@ Review each component together. Record what it does, what it needs from its host
 and whether to keep, adapt, or omit it. Preserve behavior and attribution where it
 fits. Run the smallest check that demonstrates each change.
 
-Scope: 58 core skills (including 24 principles), 22 playbooks, two agents,
-three optional Benny skills, plus the worker brief, manifests, host adapter
-and supporting files. Review support code function by function with its owning
+Scope: 57 core skills (including 24 principles), 18 local playbooks, two agents,
+the worker brief, host packaging, and supporting files. Review support code function by function with its owning
 component. Fixtures and generated copies are checked against their source.
 
 ## Item 1 · Poteto mode
@@ -22,8 +21,7 @@ requires GitHub delivery to be in scope. The delivery rule takes precedence
 over PR steps in playbooks and travels with delegated work.
 
 The router now uses available host tools, inherits the session model by default,
-and runs in the current chat when delegation is unavailable. Follow-up reviews
-will replace the corresponding Cursor-specific steps in each downstream file.
+and runs in the current chat when delegation is unavailable. The local port replaces those dependencies across the retained workflows.
 
 ### Expected behavior
 
@@ -35,25 +33,31 @@ will replace the corresponding Cursor-specific steps in each downstream file.
 | Run until done | Continue within the same delivery scope |
 | Host cannot delegate | Continue in the current chat and disclose any independent check that could not run |
 
+## Local port
+
+Only Codex and Claude Code are supported runners. Both can use the same local
+workspace settings. Remote automation, the dashboard webhook skill, and live
+PR automation were removed. A local review playbook handles patch preparation.
+
 ## Review order
 
 | # | Type | Component | Status |
 |---:|---|---|---|
 | 1 | Router | [`poteto-mode`](../../skills/poteto-mode/SKILL.md) | Changed. Review below. |
-| 2 | Playbook | [`bug-fix.md`](../../skills/poteto-mode/playbooks/bug-fix.md) | Next |
+| 2 | Playbook | [`bug-fix.md`](../../skills/poteto-mode/playbooks/bug-fix.md) | Adapted for local repro and review |
 | 3 | Delegate brief | [`worker.md`](../../skills/poteto-mode/worker.md) | Pending |
-| 4 | Playbook | [`opening-a-pr.md`](../../skills/poteto-mode/playbooks/opening-a-pr.md) | Pending |
+| 4 | Playbook | `opening-a-pr.md` | Removed from local port |
 | 5 | Skill | [`setup-pstack`](../../skills/setup-pstack/SKILL.md) | Pending |
 | 6 | Agent | [`poteto-agent.md`](../../agents/poteto-agent.md) | Pending |
-| 7 | Manifest | [`.cursor-plugin/plugin.json`](../../.cursor-plugin/plugin.json) | Pending |
+| 7 | Manifest | `.cursor-plugin/plugin.json` | Removed from local port |
 | 8 | Agent | [`comment-sicko.md`](../../agents/comment-sicko.md) | Pending |
-| 9 | Optional automation skill | [`reproduce-and-fix-issues`](../../automations/benny/skills/reproduce-and-fix-issues/SKILL.md) | Pending |
-| 10 | Optional automation skill | [`setup-benny`](../../automations/benny/skills/setup-benny/SKILL.md) | Pending |
-| 11 | Optional automation skill | [`triage-issue-reports`](../../automations/benny/skills/triage-issue-reports/SKILL.md) | Pending |
+| 9 | Optional automation skill | `reproduce-and-fix-issues` | Removed from local port |
+| 10 | Optional automation skill | `setup-benny` | Removed from local port |
+| 11 | Optional automation skill | `triage-issue-reports` | Removed from local port |
 | 12 | Host adapter | [`claude-code.md`](../../docs/harness/claude-code.md) | Pending |
 | 13 | Manifest | [`plugin.json`](../../plugin.json) | Pending |
 | 14 | Skill | [`architect`](../../skills/architect/SKILL.md) | Pending |
-| 15 | Skill | [`arena`](../../skills/arena/SKILL.md) | Pending |
+| 15 | Skill | [`arena`](../../skills/arena/SKILL.md) | Codex and Claude runners |
 | 16 | Skill | [`automate-me`](../../skills/automate-me/SKILL.md) | Pending |
 | 17 | Skill | [`benchmark-checklist`](../../skills/benchmark-checklist/SKILL.md) | Pending |
 | 18 | Skill | [`blast-radius`](../../skills/blast-radius/SKILL.md) | Pending |
@@ -69,14 +73,14 @@ will replace the corresponding Cursor-specific steps in each downstream file.
 | 28 | Skill | [`ketchup`](../../skills/ketchup/SKILL.md) | Pending |
 | 29 | Skill | [`maintain-formal-verification-skill`](../../skills/maintain-formal-verification-skill/SKILL.md) | Pending |
 | 30 | Skill | [`maintain-verification-skill`](../../skills/maintain-verification-skill/SKILL.md) | Pending |
-| 31 | Skill | [`make-bot-ui`](../../skills/make-bot-ui/SKILL.md) | Pending |
+| 31 | Skill | `make-bot-ui` | Removed from local port |
 | 32 | Skill | [`no-comments`](../../skills/no-comments/SKILL.md) | Pending |
 | 33 | Skill | [`poteto-help`](../../skills/poteto-help/SKILL.md) | Pending |
 | 34 | Playbook | [`authoring-a-skill.md`](../../skills/poteto-mode/playbooks/authoring-a-skill.md) | Pending |
 | 35 | Playbook | [`autonomous-run.md`](../../skills/poteto-mode/playbooks/autonomous-run.md) | Pending |
-| 36 | Playbook | [`autopilot-full.md`](../../skills/poteto-mode/playbooks/autopilot-full.md) | Pending |
-| 37 | Playbook | [`autopilot-stack.md`](../../skills/poteto-mode/playbooks/autopilot-stack.md) | Pending |
-| 38 | Playbook | [`babysit.md`](../../skills/poteto-mode/playbooks/babysit.md) | Pending |
+| 36 | Playbook | `autopilot-full.md` | Removed from local port |
+| 37 | Playbook | `autopilot-stack.md` | Removed from local port |
+| 38 | Playbook | `babysit.md` | Removed from local port |
 | 39 | Playbook | [`eval.md`](../../skills/poteto-mode/playbooks/eval.md) | Pending |
 | 40 | Playbook | [`feature.md`](../../skills/poteto-mode/playbooks/feature.md) | Pending |
 | 41 | Playbook | [`hillclimb.md`](../../skills/poteto-mode/playbooks/hillclimb.md) | Pending |
@@ -88,7 +92,7 @@ will replace the corresponding Cursor-specific steps in each downstream file.
 | 47 | Playbook | [`refactoring.md`](../../skills/poteto-mode/playbooks/refactoring.md) | Pending |
 | 48 | Playbook | [`runtime-forensics.md`](../../skills/poteto-mode/playbooks/runtime-forensics.md) | Pending |
 | 49 | Playbook | [`session-pickup.md`](../../skills/poteto-mode/playbooks/session-pickup.md) | Pending |
-| 50 | Playbook | [`shipping.md`](../../skills/poteto-mode/playbooks/shipping.md) | Pending |
+| 50 | Playbook | `shipping.md` | Removed from local port |
 | 51 | Playbook | [`trace-forensics.md`](../../skills/poteto-mode/playbooks/trace-forensics.md) | Pending |
 | 52 | Playbook | [`visual-parity.md`](../../skills/poteto-mode/playbooks/visual-parity.md) | Pending |
 | 53 | Playbook | [`worktree-cleanup.md`](../../skills/poteto-mode/playbooks/worktree-cleanup.md) | Pending |
@@ -128,6 +132,9 @@ will replace the corresponding Cursor-specific steps in each downstream file.
 | 87 | Skill | [`typescript-best-practices`](../../skills/typescript-best-practices/SKILL.md) | Pending |
 | 88 | Skill | [`unslop`](../../skills/unslop/SKILL.md) | Pending |
 | 89 | Skill | [`why`](../../skills/why/SKILL.md) | Pending |
+| 90 | Playbook | [Prepare a local review](../../skills/poteto-mode/playbooks/prepare-review.md) | Local replacement for PR delivery |
+| 91 | Manifest | [Codex plugin](../../.codex-plugin/plugin.json) | Added |
+| 92 | Marketplace | [Codex local marketplace](../../../.agents/plugins/marketplace.json) | Added |
 
 ## Supporting source
 
@@ -140,18 +147,6 @@ and test fixtures are verified with their generators and tests.
 | Router helpers | [`poteto-mode/scripts/bootstrap.ts`](../../skills/poteto-mode/scripts/bootstrap.ts) |
 | Router helpers | [`poteto-mode/scripts/bun.lock`](../../skills/poteto-mode/scripts/bun.lock) |
 | Router helpers | [`poteto-mode/scripts/package.json`](../../skills/poteto-mode/scripts/package.json) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/cli.test.ts`](../../skills/poteto-mode/scripts/watch-pr/cli.test.ts) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/cli.ts`](../../skills/poteto-mode/scripts/watch-pr/cli.ts) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/fakes.test-helper.ts`](../../skills/poteto-mode/scripts/watch-pr/fakes.test-helper.ts) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/github.test.ts`](../../skills/poteto-mode/scripts/watch-pr/github.test.ts) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/github.ts`](../../skills/poteto-mode/scripts/watch-pr/github.ts) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/policy.test.ts`](../../skills/poteto-mode/scripts/watch-pr/policy.test.ts) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/policy.ts`](../../skills/poteto-mode/scripts/watch-pr/policy.ts) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/render.ts`](../../skills/poteto-mode/scripts/watch-pr/render.ts) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/tsconfig.json`](../../skills/poteto-mode/scripts/watch-pr/tsconfig.json) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/types.compile.ts`](../../skills/poteto-mode/scripts/watch-pr/types.compile.ts) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/types.ts`](../../skills/poteto-mode/scripts/watch-pr/types.ts) |
-| PR watcher | [`poteto-mode/scripts/watch-pr/watch-pr`](../../skills/poteto-mode/scripts/watch-pr/watch-pr) |
 | Worktree cleanup | [`poteto-mode/scripts/worktree-audit.sh`](../../skills/poteto-mode/scripts/worktree-audit.sh) |
 | Decision log | [`show-me-your-work/scripts/log.sh`](../../skills/show-me-your-work/scripts/log.sh) |
 | Statechart | [`statechart/scripts/backends/cfg.ts`](../../skills/statechart/scripts/backends/cfg.ts) |
@@ -201,7 +196,4 @@ and test fixtures are verified with their generators and tests.
 | Packaging and docs | [`scripts/check-pstack-docs.mjs`](../../../scripts/check-pstack-docs.mjs) |
 | Packaging and docs | [`scripts/generate-pstack-harness-trees.mjs`](../../../scripts/generate-pstack-harness-trees.mjs) |
 
-Also review the linked references and templates when reviewing their owning
-skill, the [README](../../README.md) and [guide](../guide/README.md) with the
-behavior they document, and the [Benny automation pack](../../automations/benny/README.md)
-with its skills.
+Review each supporting reference with its owning skill and keep the [README](../../README.md) and [guide](../guide/README.md) in sync.

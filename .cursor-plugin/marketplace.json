@@ -74,11 +74,6 @@
       "description": "Fan large tasks out across parallel cloud agents with planners, workers, verifiers, and structured handoffs."
     },
     {
-      "name": "pstack",
-      "source": "pstack",
-      "description": "if you want to go fast, go deep first. pstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence."
-    },
-    {
       "name": "dyl-stack",
       "source": "dyl-stack",
       "description": "Dylan's agent style on top of pstack: root causes over symptom patches, The Algorithm before design, terse verified delivery, a PR review that fits in a paste, and Figma-to-UI with a visual judge."

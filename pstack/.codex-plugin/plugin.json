@@ -1,0 +1,13 @@
+{
+  "name": "pstack",
+  "version": "0.15.43",
+  "description": "Local engineering playbooks and skills for Codex and Claude Code.",
+  "author": { "name": "Lauren Tan" },
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Pstack",
+    "shortDescription": "Local engineering workflows",
+    "category": "Productivity"
+  }
+}
