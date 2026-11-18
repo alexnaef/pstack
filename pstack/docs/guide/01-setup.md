@@ -29,7 +29,7 @@ Run:
 /setup-pstack
 ```
 
-[`/setup-pstack`](../../skills/setup-pstack/SKILL.md) detects the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. It writes `.pstack/models.md`, a small rule every pstack skill reads.
+[`/setup-pstack`](../../skills/setup-pstack/SKILL.md) detects the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. It writes `~/.pstack/models.md`, a small personal rule every pstack skill reads in every project and worktree, never committed. For a team config you intend to share, it can write the project's `.pstack/models.md` instead; commit it, since worktrees only contain tracked files. A project file, when present, replaces the personal one for that project.
 
 The defaults are the same as the `large` budget. Code, prose, and judgment use Claude Opus at `xhigh`. Claude review panel seats and swarm workers use `high`. No role runs above `xhigh`. Outside a review panel, Claude Fable runs only when you name it for a task or after two Opus runs of the same brief fail their check. `medium` lowers each role's configured effort one level and `small` lowers it two.
 

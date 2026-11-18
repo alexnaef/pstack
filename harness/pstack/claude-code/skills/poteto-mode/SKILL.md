@@ -87,7 +87,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 **Use `poteto-agent` for any subagent you spawn directly inside a playbook step.** The chat that receives `/poteto-mode` runs the playbook itself. Routed workflow skills (`interrogate`, `swarm`) select their own worker type. Respect it.
 
-**Defaults for delegation.** Use local workers, file pointers, and background runs when the host supports them. Read the role in `.pstack/models.md` written by [setup-pstack](../setup-pstack/SKILL.md) and validate it using Host tools. A missing role uses its default. `inherit-parent` and `auto` use the current session model when supported. Keep the same role selection for all delegates, including project workers.
+**Defaults for delegation.** Use local workers, file pointers, and background runs when the host supports them. Read the role in the model rule written by [setup-pstack](../setup-pstack/SKILL.md): the project's `.pstack/models.md` if it exists, otherwise `~/.pstack/models.md`, otherwise the defaults and validate it using Host tools. A missing role uses its default. `inherit-parent` and `auto` use the current session model when supported. Keep the same role selection for all delegates, including project workers.
 
 - Code, prose, and judgment: Claude Opus at xhigh where available, otherwise inherit the current host model.
 - Trivial mechanical edits: `opus (high)`.
