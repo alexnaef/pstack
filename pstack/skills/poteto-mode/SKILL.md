@@ -8,7 +8,9 @@ color: yellow
 
 # Poteto mode
 
-This chat owns the task. Load [bundled skills](../) by their path relative to this file, `../<name>/SKILL.md`, when there is no native skill invocation. Follow the current session's instructions and the target repository's rules throughout.
+Read [Host tools](../../docs/harness/host-tools.md) for Codex and Claude Code. Follow the target checkout's repository instructions.
+
+Bundled skills live at `../<name>/SKILL.md` from this file, so put this file's absolute path in every `poteto-agent` prompt.
 
 ## Non-negotiables
 
@@ -16,14 +18,15 @@ The [Principles](#principles) section below grounds every trigger. In your reply
 
 The remaining triggers live only here:
 
-- First message → restate the user's goal and the smallest change that meets it, then proceed. Open each subagent brief and final report with the goal.
-- Starting a delegate → pass the relevant instructions, authorized scope, file paths, and success check. See [Subagents](#subagents).
+- First message → restate the user's goal and the smallest change that meets it, then proceed. Open each subagent brief, PR `## Why`, and final report with the goal.
+- Starting any agent, whether a Task subagent or a Project worker → the first line of its kickoff is `Read <path>/worker.md before anything else.`, with `<path>` the absolute path of this skill's folder. See [worker.md](worker.md). The operator's rules live in skills that only load from a slash command, so they reach another agent no other way. Keep the rest of the kickoff to the goal and the task, plus this file's absolute path for a `poteto-agent`.
 - A fork you could settle by running something → prototype it per [`playbooks/prototype.md`](playbooks/prototype.md) instead of asking.
 - Code → name the data shape first. Across a function boundary → [**architect**](../architect/SKILL.md). Fan-out → [**swarm**](../swarm/SKILL.md). Bakeoff → [**arena**](../arena/SKILL.md). Contested design → [**interrogate**](../interrogate/SKILL.md).
 - Prose, your reply included → [**unslop**](../unslop/SKILL.md). Docs, PR descriptions, commit messages → [**technical-writing**](../technical-writing/SKILL.md).
-- Before committing through an authorized workflow → review the diff for unrelated churn, redundant code, and misleading comments. Before review → [**no-comments**](../no-comments/SKILL.md), within the scope of the request.
-- Verifying UI, IDE, or CLI behavior → run the real user flow with an available browser, desktop, or terminal tool. If it cannot run, state what you did verify and what remains unverified.
+- Before commit → run the host guide's scoped code cleanup. Before review → [**no-comments**](../no-comments/SKILL.md).
+- Shipping UI / IDE / CLI → the project's verification skill or matching host control tool.
 - A number you measured → [**benchmark-checklist**](../benchmark-checklist/SKILL.md).
+- PR status → the [**Babysit**](playbooks/babysit.md) playbook. Landing a green stack → the [**Shipping**](playbooks/shipping.md) playbook.
 - Bot review comments → judge each on its merits.
 - Long or unattended work → [**show-me-your-work**](../show-me-your-work/SKILL.md).
 
@@ -72,23 +75,29 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Autonomy
 
-**Delivery is local.** Finish with a verified local patch and its evidence. Use [Prepare a local review](playbooks/prepare-review.md) when the user wants a review handoff.
+**Just do it.** Use any MCP tool. Reversible work and external actions (team chat, ticket updates, kicking off evals) proceed without asking.
 
-**Keep the delivery scope across steps.** Use local tools, files, and worktrees throughout. Treat an external review or release request as separate from this skill's local preparation.
+**Always pause** for irreversible writes: force-push to shared branches, deploys, data deletion, customer messages.
 
-**Unattended work stays within its authorization.** "Run until done" lets the agent continue within the agreed scope. Follow applicable approvals for irreversible operations and explicit authorization requirements for sending messages.
+**Session overrides:** "Don't stop" / "going to bed" / "run until done" / "be fully autonomous" → keep going.
 
 **No is an acceptable answer.** Asked whether to do something, invited to add scope, or shown an approach, reply with your real judgment. Decline, push back, or say "this doesn't earn its place" when true. A recommendation is a judgment, not a validation. Agreement is not the default, candor over sycophancy.
 
 ## Subagents
 
-Delegate when the current session allows it and the work benefits from a separate agent. If delegation is unavailable or disallowed, do the work in this chat and report any independent check you could not perform. A playbook's request for a delegate follows the same rule.
+**Use `subagent_type: "poteto-agent"` for any subagent you spawn directly inside a playbook step.** The chat that receives `/poteto-mode` runs the playbook itself. Routed workflow skills (`interrogate`, `swarm`) set their own `subagent_type`. Respect it.
 
-Use the host's available delegation tools. Give each delegate the exact files or inputs, the task goal, a measurable finish condition, and the delivery scope from [Autonomy](#autonomy). Pass the paths to this skill and [`worker.md`](worker.md) if the delegate can read them. State the delivery scope in the kickoff so it overrides any broader delivery step in `worker.md`. Use separate paths or worktrees for concurrent edits when the host supports them.
+**Defaults for delegation.** Use local workers, file pointers, and background runs when the host supports them. Read the role in `.pstack/models.md` written by [setup-pstack](../setup-pstack/SKILL.md). A missing role uses its default. `inherit-parent` and `auto` use the current session model. Keep the same role selection for all delegates, including project workers.
 
-Read [local runners](references/local-runners.md). Use the session model or a configured Codex or Claude runner, subject to the host's permissions. Say which runner actually ran and report gaps in independent verification.
+- Code, prose, and judgment: Claude Opus at xhigh where available, otherwise inherit the current host model.
+- Trivial mechanical edits: `claude-opus-5-5-high-fast`.
+- Diverse review and design panels: one runner each on `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, and `codex`.
 
-You own every subagent's work. Read its diff and confirm the evidence yourself.
+**Fable 5.2 is an exception.** It runs outside a panel only when the user named it for this task or two Opus 5.5 xhigh runs of the same brief failed its check. Say which. Difficulty alone never qualifies.
+
+**Match the model to the job.** Start from the role's line or default, keep its family, and set the level the job needs. The `/setup-pstack` budget sets each role's starting level. Panel seats keep their listed level. Raise any other role one step, up to xhigh, for the hardest or subtlest work, lower it one step for judgment, and two or more steps for routine work. No role runs above xhigh. Use the host's fast variant where the selected model offers it. Verification always runs on the configured `swarm workers` model (otherwise Claude Opus at high when available). If the host rejects a model, never pass it again. Fall back to the role's line or default, then the calling skill's fallback, then the closest valid slug of the same family, then omit `model`. Say so.
+
+You own every subagent's work. Review the diff and write your own summary. A second opinion is the same prompt on another vendor's model.
 
 **Fresh subagents by default.** Give a fix round, a follow-up, a retry, or the next queue item to a fresh subagent with the original brief, every later directive, and the prior agent's report and branch. Resume an existing subagent only when the work needs state that lives in it and is costly to move: its checkout, its uncommitted changes, or a process it still runs.
 
@@ -98,7 +107,7 @@ Write short declarative sentences with no long dash and no colon as a connector.
 
 ## Playbooks
 
-Match the task to a playbook and open its steps in [`playbooks/`](playbooks/) at `<title>.md`, with the title in kebab case. Track the applicable steps using the host's planning tool when available. Large, cross-cutting, or unattended work, or a task no playbook fits, routes to the [**figure-it-out**](../figure-it-out/SKILL.md) skill. Apply the delivery scope and tool availability rules above to every step.
+Match the task to a playbook and open its steps at `playbooks/<title>.md`, with the title in kebab case. Copy its steps into the todolist tool first. Large, cross-cutting, or unattended work, or a task no playbook fits, routes to the [**figure-it-out**](../figure-it-out/SKILL.md) skill.
 
 - [Investigation](playbooks/investigation.md)
 - [Bug fix](playbooks/bug-fix.md)
@@ -112,9 +121,13 @@ Match the task to a playbook and open its steps in [`playbooks/`](playbooks/) at
 - [Visual parity](playbooks/visual-parity.md)
 - [Authoring a skill](playbooks/authoring-a-skill.md)
 - [Eval](playbooks/eval.md)
+- [Babysit](playbooks/babysit.md)
+- [Shipping](playbooks/shipping.md)
 - [Autonomous run](playbooks/autonomous-run.md)
+- [Autopilot-full](playbooks/autopilot-full.md)
+- [Autopilot-stack](playbooks/autopilot-stack.md)
 - [Session pickup](playbooks/session-pickup.md)
 - [Pause safely](playbooks/pause-safely.md)
 - [Multi-phase plan](playbooks/multi-phase-plan.md)
 - [Worktree cleanup](playbooks/worktree-cleanup.md)
-- [Prepare a local review](playbooks/prepare-review.md)
+- [Opening a PR](playbooks/opening-a-pr.md)

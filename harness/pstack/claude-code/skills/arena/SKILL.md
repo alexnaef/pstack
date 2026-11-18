@@ -6,7 +6,9 @@ disable-model-invocation: true
 
 # Arena
 
-Track one entry per phase (Frame, Fan out, Cross-judge, Pick, Graft, Verify) with the host's planning tool when available. Follow [local runners](../poteto-mode/references/local-runners.md).
+Read [Host tools](../../docs/harness/host-tools.md) for host and project mappings.
+
+Open a todolist with one entry per phase (Frame, Fan out, Cross-judge, Pick, Graft, Verify) before launching anything.
 
 ## Phase A: Frame
 
@@ -14,18 +16,18 @@ Every candidate gets the same prompt, so the prompt is the contract.
 
 1. State the artifact each candidate is producing.
 2. Derive the rubric, 3-6 concrete gradeable criteria for what success looks like on *this* task. It is the picker's tool in Phase D. Candidates only see the task.
-3. Use `arenaRunners` from the project's `.pstack/models.json`, defaulting to one Codex and one Claude attempt. Run the eligible entries. If only one provider is available, use separate attempts on that provider and say so. If fewer than two independent candidates finish, report the limitation and verify the available result without claiming a comparison.
+3. Pick the runners from the `arena runners` line in `.pstack/models.md`, by default `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, and `codex`. An `auto` or `inherit-parent` entry is the parent model, so omit `model` and spawn `generalPurpose`. If the host rejects a model, use the nearest valid slug of the same family or drop the seat, keep at least two runners, and say so. Treat Fable and Opus as separate model families from the same provider. Use the permitted local Codex runner for a `codex` seat. Spawn more for multiple design directions, and repeat one model when the work is generation-bound, not judgment-sensitive. Pick each subagent's reasoning level per the Subagents section of the **poteto-mode** skill.
 4. Give each candidate its own output location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per the **separate-before-serializing-shared-state** principle skill.
 
 ## Phase B: Fan out
 
-Start the candidates locally in parallel when the host permits it. Give each the same task, shared grounding, a separate output path, and a request for a short rationale. If delegation is unavailable, compare options in this session and say they came from one agent.
+Spawn all N subagents in one message with `run_in_background: true`, each with the task, the path to the shared grounding, its own output path, and instructions to produce the artifact and a short rationale naming the alternatives it considered and what it rejected.
 
 If a candidate produces no output, proceed with N-1 and note the dropout.
 
 ## Phase C: Cross-judge
 
-After the candidates finish, use `arenaJudges` (default Codex and Claude) to select the first available read-only judge from the other provider than the coordinator. The judge scores each candidate against the same rubric and recommends a base. If the coordinator's provider is unknown or the other provider cannot run, record that there was no cross-judge and proceed with the coordinator's own scores.
+After all Phase B candidates complete, spawn one readonly judge from the `arena cross-judge pool` line in `.pstack/models.md`, by default `claude-opus-5-5-high-fast`, `codex`. The judge is never from the parent's vendor, and Fable counts as Claude for that check, so use the first entry from another vendor. An `auto` or `inherit-parent` entry is the parent model. If you do not know the parent's model, skip the cross-judge and say why. If the host rejects a model, use the nearest valid slug of the same family, then the next such entry, or skip the judge, and say so. While you read in Phase D, the judge scores each candidate, by path label, on each rubric criterion and recommends a base.
 
 ## Phase D: Pick a base
 

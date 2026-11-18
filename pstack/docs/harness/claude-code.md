@@ -1,5 +1,10 @@
 # pstack in Claude Code
 
-Load the generated package with `claude --plugin-dir /path/to/harness/pstack/claude-code` from the target project. Use the `pstack`-prefixed skill when the host exposes it, or explicitly ask Claude to use the named skill.
+Load the generated package with `claude --plugin-dir /path/to/harness/pstack/claude-code`
+from the target project. Use the `pstack`-prefixed command where exposed. Read
+[Host tools](host-tools.md) for the common mappings.
 
-Use Claude Code's local delegation and worktree tools when permitted. A named Claude agent is optional, since each agent brief is also available as a file. Read [local runners](../../skills/poteto-mode/references/local-runners.md) for selection, permissions, and how to use a local Codex runner.
+Use Claude Code's local agent and worktree tools when permitted. Map a Claude
+model alias and effort to fields exposed by the current host. A Codex seat uses
+a permitted local Codex runner, if available. If it cannot run, report the
+missing seat rather than treating a Claude worker as Codex.

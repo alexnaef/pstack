@@ -24,6 +24,7 @@ function file(path) {
 const targets = [
   ...walk(join(source, "skills")),
   ...walk(join(source, "agents")),
+  ...walk(join(source, "automations")),
   ...walk(join(source, "docs", "guide")),
   ...walk(join(source, "docs", "harness")),
   ...["README.md", "LICENSE", "plugin.json"].map((path) => join(source, path)),

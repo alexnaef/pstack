@@ -1,6 +1,6 @@
 # Route work through `/poteto-mode`
 
-`/poteto-mode` is the front door. You give it a goal, it matches a local playbook, copies that playbook's steps into the todo list, and calls the other skills as the steps need them. In this page you learn what a good prompt looks like, and how little of one you actually need.
+`/poteto-mode` is the front door. You give it a goal, it matches one of twenty-two playbooks, copies that playbook's steps into the todo list, and calls the other skills as the steps need them. In this page you learn what a good prompt looks like, and how little of one you actually need.
 
 ![A dispatcher pulls a switch lever to route robots on rail handcars toward lit gates, under a /poteto-mode departure board listing BUG FIX, FEATURE, and INVESTIGATION.](./images/router.jpg)
 
@@ -25,7 +25,7 @@ flowchart TD
     J --> K
 ```
 
-The [playbook directory](../../skills/poteto-mode/playbooks/) has the full set.
+The diagram shows the common routes. There are also playbooks for hillclimbing a metric, diagnosing runtime symptoms and captured traces, prototypes, visual parity, authoring and evaluating skills, autonomous runs, opening a PR, babysitting a PR or stack to merge-ready, shipping a verified stack, running a PR queue or a stack on autopilot, session pickup, pausing safely, multi-phase plans, and worktree cleanup. The [playbook directory](../../skills/poteto-mode/playbooks/) has the full set.
 
 ## Say the goal, not the ceremony
 
@@ -36,8 +36,6 @@ You don't write a spec. You say what's wrong or what you want, plus anything you
 ```
 
 That's a Bug fix prompt. "repro first" is a real constraint, not politeness, and the playbook honors it. Watch the todo list fill with the Bug fix steps.
-
-An ordinary fix ends with a verified local patch and the evidence from the run. Ask for a local review handoff if you want a diff and summary prepared for review.
 
 ## What goes in a prompt
 
@@ -92,7 +90,7 @@ continue
 keep going until done
 ```
 
-Short requests work because the playbook holds the steps. Start a fresh chat with the skill name when switching to a new task.
+Short requests work because the playbook holds the steps. Invoke the skill at the start of a new task if it has gone out of context.
 
 ## Switch tasks with "new task"
 
@@ -104,9 +102,25 @@ A long chat accumulates context from the last task. When you change subjects, sa
 
 "new task" tells `/poteto-mode` to re-match rather than continue the prior playbook. "don't change any code yet" pins this one to Investigation. Without those two phrases, a mode mid-Feature tends to treat your question as the next feature step.
 
-## Isolate parallel local work
+## Give parallel work its own machine
 
-Give each writing worker a separate local worktree. Use the plan to sequence changes to shared files so workers can verify their patches independently. The [worktree cleanup playbook](../../skills/poteto-mode/playbooks/worktree-cleanup.md) covers safe cleanup.
+Give each worker its own local worktree, ports, and build outputs. Use the host's local delegation tools.
+
+When the work has to stay local, ask for a worktree up front:
+
+```text
+/poteto-mode new task. branch off <base> in a fresh worktree, then port the parser change there.
+```
+
+Each task in its own branch and worktree means no agent stomps another's files. Worktrees cost disk and machine resources, so a laptop runs only a handful at once. The [Opening a PR playbook](../../skills/poteto-mode/playbooks/opening-a-pr.md) already works from a worktree for code changes, so mostly you only say this when a specific base or location matters.
+
+Worktrees accumulate. When disk gets tight, ask:
+
+```text
+/poteto-mode what's eating my disk? prune the worktrees that are safe to prune.
+```
+
+The [Worktree cleanup playbook](../../skills/poteto-mode/playbooks/worktree-cleanup.md) classifies every worktree by merge state, uncommitted work, and which chats still touch it. It deletes only what that evidence clears and pauses for your call on anything holding uncommitted work.
 
 ## Leave it running
 
