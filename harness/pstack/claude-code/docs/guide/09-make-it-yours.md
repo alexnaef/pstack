@@ -20,6 +20,8 @@ Run it again whenever your habits drift:
 
 Update mode mines only the history since the skill last changed. It keeps rules you haven't contradicted, revises the ones with new evidence, and adds sections only for new patterns.
 
+This fork includes [Alexander mode](../../skills/alexander-mode/SKILL.md). In Claude Code, invoke `/pstack:alexander-mode` to review a workflow together one item at a time.
+
 ## Capture a session's lessons with `/reflect`
 
 Right after a task that taught you something, run:
