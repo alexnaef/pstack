@@ -109,7 +109,7 @@ repository's tools and verification rules.
 | 87 | Skill | [`typescript-best-practices`](../../skills/typescript-best-practices/SKILL.md) | Pending |
 | 88 | Skill | [`unslop`](../../skills/unslop/SKILL.md) | Pending |
 | 89 | Skill | [`why`](../../skills/why/SKILL.md) | Pending |
-| 90 | Host adapter | [Host tools](../harness/host-tools.md) | Codex, Claude Code, and Fise mappings |
+| 90 | Host adapter | [Host tools](../harness/host-tools.md) | Codex and Claude Code mappings |
 
 ## Supporting source
 
