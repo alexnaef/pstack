@@ -26,7 +26,7 @@ repository's tools and verification rules.
 | 4 | Playbook | [`opening-a-pr.md`](../../skills/poteto-mode/playbooks/opening-a-pr.md) | Pending |
 | 5 | Skill | [`setup-pstack`](../../skills/setup-pstack/SKILL.md) | Pending |
 | 6 | Agent | [`poteto-agent.md`](../../agents/poteto-agent.md) | Pending |
-| 7 | Manifest | `.cursor-plugin/plugin.json` | Excluded vendor installation |
+| 7 | Manifest | [Codex plugin manifest](../../.codex-plugin/plugin.json) | Codex installation |
 | 8 | Agent | [`comment-sicko.md`](../../agents/comment-sicko.md) | Pending |
 | 9 | Optional automation skill | [`reproduce-and-fix-issues`](../../automations/benny/skills/reproduce-and-fix-issues/SKILL.md) | Pending |
 | 10 | Optional automation skill | [`setup-benny`](../../automations/benny/skills/setup-benny/SKILL.md) | Pending |

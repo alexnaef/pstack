@@ -80,7 +80,7 @@ Ask for or confirm:
 - Polling and effort budgets
 - Model slug for triage, repro, code work, and media review
 
-Use only model slugs shown as available in the active host's supported model list. Do not guess a slug and do not carry over a private default.
+Choose from the models verified on the local Codex or Claude Code runner that will use them. Recheck model choices from existing configurations before reusing them.
 
 The source channel, triage identity, repository, tracker adapter, control skill, and feature map must be explicit. Fail setup if any required value stays ambiguous.
 
@@ -152,12 +152,12 @@ For each automation:
 3. Tell the live prompt to read and follow its exact committed operational file under `.pstack/automations/benny/`.
 4. Use the stable repository-relative path, not a plugin source or cache path. Do not copy the operational file contents into the live prompt.
 5. Read and follow the authorized host's automation tool.
-6. Let `automate` discover Slack channels, the repository, and connected integrations.
-7. Let `automate` confirm that the copied pack and any referenced configuration files are committed in the same repository where the automation will run.
+6. Discover Slack channels, the repository, and connected integrations through the host's available tools.
+7. Verify that the copied pack and any referenced configuration files are committed in the same repository where the automation will run.
 8. Present the host's draft and readiness checks, and let the user review it in the host's editor if available.
 9. Finish the editor handoff for this automation before starting the next one.
 
-Give `automate` this complete triage intent, filled from configuration:
+Fill in the complete triage intent from configuration:
 
 - Name `benny-triage`.
 - Read and follow `.pstack/automations/benny/skills/triage-issue-reports/SKILL.md` for every run.
@@ -168,14 +168,14 @@ Give `automate` this complete triage intent, filled from configuration:
 - End one thread-only verdict with the configured `[benny:bug]`, `[benny:performance]`, or `[benny:other]` marker and optional tracker URL.
 - Never post a source-channel root message.
 
-After the triage editor handoff is complete, give `automate` this complete repro and fix intent:
+After the triage editor handoff, fill in the repro and fix intent:
 
 - Name `benny-reproduce`.
 - Read and follow `.pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md` for every run.
 - Trigger on the same new top-level reports in the configured source Slack channel.
 - Use the configured repository and default branch.
 - Read the source thread and reply only inside it.
-- Include pull request creation and the configured tracker, control-adapter, and feature-map requirements. Paraphrase mapped user paths and states unless `automate` confirms an eligible committed file in the same repository.
+- Include pull request creation and the configured tracker, control-adapter, and feature-map requirements. Paraphrase mapped user paths and states unless they refer to a verified committed file in the same repository.
 - Wait for a trusted triage marker before acting.
 - Reproduce the exact symptom twice through the mapped real UI and capture evidence.
 - Verify an existing fix without authoring over it.
@@ -214,7 +214,7 @@ Ask the user to update each existing automation directly in its Automations edit
 
 ### Creation boundary
 
-Use the authorized host automation interface. If the host lacks the configured trigger or readiness controls, keep both templates available for on-demand runs and report the missing capability.
+Use the authorized host automation interface with a local runner. If the host lacks local execution, the configured trigger, or readiness controls, keep both templates available for on-demand local runs and report the missing capability.
 
 Do not enable either automation until the thread-safety test passes after the editor save.
 

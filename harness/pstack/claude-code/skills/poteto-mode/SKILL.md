@@ -19,7 +19,7 @@ The [Principles](#principles) section below grounds every trigger. In your reply
 The remaining triggers live only here:
 
 - First message → restate the user's goal and the smallest change that meets it, then proceed. Open each subagent brief, PR `## Why`, and final report with the goal.
-- Starting any agent, whether a Task subagent or a Project worker → the first line of its kickoff is `Read <path>/worker.md before anything else.`, with `<path>` the absolute path of this skill's folder. See [worker.md](worker.md). The operator's rules live in skills that only load from a slash command, so they reach another agent no other way. Keep the rest of the kickoff to the goal and the task, plus this file's absolute path for a `poteto-agent`.
+- Starting any local subagent or workstream worker → the first line of its kickoff is `Read <path>/worker.md before anything else.`, with `<path>` the absolute path of this skill's folder. See [worker.md](worker.md). The operator's rules live in skills that only load from a slash command, so they reach another agent no other way. Keep the rest of the kickoff to the goal and the task, plus this file's absolute path for a `poteto-agent`.
 - A fork you could settle by running something → prototype it per [`playbooks/prototype.md`](playbooks/prototype.md) instead of asking.
 - Code → name the data shape first. Across a function boundary → [**architect**](../architect/SKILL.md). Fan-out → [**swarm**](../swarm/SKILL.md). Bakeoff → [**arena**](../arena/SKILL.md). Contested design → [**interrogate**](../interrogate/SKILL.md).
 - Prose, your reply included → [**unslop**](../unslop/SKILL.md). Docs, PR descriptions, commit messages → [**technical-writing**](../technical-writing/SKILL.md).
@@ -85,17 +85,17 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Subagents
 
-**Use `subagent_type: "poteto-agent"` for any subagent you spawn directly inside a playbook step.** The chat that receives `/poteto-mode` runs the playbook itself. Routed workflow skills (`interrogate`, `swarm`) set their own `subagent_type`. Respect it.
+**Use `poteto-agent` for any subagent you spawn directly inside a playbook step.** The chat that receives `/poteto-mode` runs the playbook itself. Routed workflow skills (`interrogate`, `swarm`) select their own worker type. Respect it.
 
-**Defaults for delegation.** Use local workers, file pointers, and background runs when the host supports them. Read the role in `.pstack/models.md` written by [setup-pstack](../setup-pstack/SKILL.md). A missing role uses its default. `inherit-parent` and `auto` use the current session model. Keep the same role selection for all delegates, including project workers.
+**Defaults for delegation.** Use local workers, file pointers, and background runs when the host supports them. Read the role in `.pstack/models.md` written by [setup-pstack](../setup-pstack/SKILL.md) and validate it using Host tools. A missing role uses its default. `inherit-parent` and `auto` use the current session model when supported. Keep the same role selection for all delegates, including project workers.
 
 - Code, prose, and judgment: Claude Opus at xhigh where available, otherwise inherit the current host model.
-- Trivial mechanical edits: `claude-opus-5-5-high-fast`.
-- Diverse review and design panels: one runner each on `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, and `codex`.
+- Trivial mechanical edits: `opus (high)`.
+- Diverse review and design panels: one runner each on `fable (high)`, `opus (high)`, and `codex`.
 
-**Fable 5.2 is an exception.** It runs outside a panel only when the user named it for this task or two Opus 5.5 xhigh runs of the same brief failed its check. Say which. Difficulty alone never qualifies.
+**Claude Fable is an exception.** It runs outside a panel only when the user named it for this task or two Claude Opus xhigh runs of the same brief failed its check. Say which. Difficulty alone never qualifies.
 
-**Match the model to the job.** Start from the role's line or default, keep its family, and set the level the job needs. The `/setup-pstack` budget sets each role's starting level. Panel seats keep their listed level. Raise any other role one step, up to xhigh, for the hardest or subtlest work, lower it one step for judgment, and two or more steps for routine work. No role runs above xhigh. Use the host's fast variant where the selected model offers it. Verification always runs on the configured `swarm workers` model (otherwise Claude Opus at high when available). If the host rejects a model, never pass it again. Fall back to the role's line or default, then the calling skill's fallback, then the closest valid slug of the same family, then omit `model`. Say so.
+**Match the model to the job.** Start from the role's line or default, keep its family, and set the level the job needs. The `/setup-pstack` budget sets each role's starting level. Panel seats keep their listed level. Raise any other role one step, up to xhigh, for the hardest or subtlest work, lower it one step for judgment, and two or more steps for routine work. No role runs above xhigh. Use the host's fast variant where the selected model offers it. Verification always runs on the configured `swarm workers` model (otherwise Claude Opus at high when available). If the host rejects a model, never pass it again. Fall back to the role's line or default, then the calling skill's fallback, then the closest valid slug of the same family, then use the current session model if supported. Say so.
 
 You own every subagent's work. Review the diff and write your own summary. A second opinion is the same prompt on another vendor's model.
 

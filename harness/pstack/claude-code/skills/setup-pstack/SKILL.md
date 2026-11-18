@@ -13,13 +13,13 @@ Write `.pstack/models.md`, a project-local rule that sets pstack's model per rol
 
 ### 1. Detect available models
 
-Enumerate the model slugs you can pass to a `Task` subagent in this session. That is the dependable source. Use the active host's available model list for completeness. Only list models from permitted runtimes. The labels `codex` and `claude` select those hosts' defaults if available. If you cannot detect any, ask the user to paste the slugs they have access to. Never write a real slug you have not confirmed is available. The aliases `inherit-parent` and `auto` are always valid even though they are not detected slugs.
+Check the available model lists on local Codex and Claude Code runners. Use the active host's delegation tool for its available selectors. The labels `codex` and `claude` select those hosts' defaults if available. If you cannot detect any models, ask the user which supported models they have access to. Verify explicit selectors before writing them. `inherit-parent` and `auto` are available when the current session already runs on a supported model.
 
 ### 2. Load current state
 
 The default role-to-model mapping is the rule shape shown in step 5 below. If `.pstack/models.md` already exists, read it and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults. A line whose role is not in step 5, such as `hardest tasks`, `architect runners`, `reflect tooling`, or `why investigators`, is from a retired role. Drop it.
 
-Discard entries that call excluded vendors or tools, and report them. Keep supported per-role choices and existing `inherit-parent` and `auto` entries. An unavailable default uses the active host's verified equivalent or inherits the session; an unavailable explicit choice is shown for correction.
+Discard entries that use unsupported runners or model providers, and report them. Preserve supported per-role choices and effort settings, including `inherit-parent` and `auto` when supported. Convert an older model selector if the same model and effort are available under a native name. Use the active host's verified equivalent or inherit the session for an unavailable default. Show unavailable explicit choices for correction.
 
 ### 3. Budget, map, and confirm
 
@@ -29,13 +29,13 @@ Discard entries that call excluded vendors or tools, and report them. Keep suppo
 - `medium — high reasoning`
 - `small — medium reasoning`
 
-**(b) Apply it.** Build the working table from the skill defaults, and on a re-run keep any role you changed by family, list, or alias (`inherit-parent`, `auto`). Families are the ones Phase A of the **arena** skill defines, so Fable is its own family. Each role has a target effort, which is its default's effort moved by the budget. `large` keeps it, `medium` lowers it one step, and `small` lowers it two steps, on the ladder `xhigh` > `high` > `medium` > `low`. No role runs above `xhigh`, and a target at the bottom of the ladder stays there. Most defaults are at `xhigh`, and each budget label names where those land. Set the effort token of every real slug in the role, panel entries included, to the role's target. The effort token is the last token, or the one before a trailing `fast`. If the result is not a detected slug, use the same family's detected slug with the highest effort at or below the target, else mark the role as needing a choice. `inherit-parent` and `auto` do not change. So `medium` turns `claude-opus-5-5-xhigh-fast` into `claude-opus-5-5-high-fast` and `claude-opus-5-5-high-fast` into `claude-opus-5-5-medium-fast`, and `small` turns them into `claude-opus-5-5-medium-fast` and `claude-opus-5-5-low-fast`. Opus 5.5 always runs its `-fast` slug, so every Opus 5.5 value ends in `-fast`. Fable has no fast variant. Do not append effort or speed to the provider labels `codex` and `claude`; apply effort through the runner where supported.
+**(b) Apply it.** Build the working table from the skill defaults. On a rerun, keep each role's chosen model family, panel list, or alias. Treat Fable and Opus as separate families. `large` keeps each role's default effort, `medium` lowers it one step, and `small` lowers it two, on the ladder `xhigh` > `high` > `medium` > `low`. Stop at `low`. For example, `medium` changes `opus (xhigh)` to `opus (high)` and `opus (high)` to `opus (medium)`. Pass effort separately from the model selector. If the runner cannot set the target effort, use the highest supported effort at or below it in the same family or mark the role as needing a choice. `inherit-parent` and `auto` keep the parent's model and settings.
 
 **(c) Show the roles and confirm.** Show every role with its model, marking any real slug not in the detected set as needing a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering the detected models at `xhigh` or below plus the applicable provider aliases and `inherit-parent` or `auto` (both mean: this role runs on the parent chat model, which is how Auto users stay on Auto) as the options. Prefer AskQuestion over free text. For panel roles (arena runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena runs one judge. It tries only values from a vendor other than the parent's, in list order, so order it by preference. Fable and the other Claude models are one vendor. An `inherit-parent` or `auto` value never judges. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
 
 ### 4. Validate
 
-Each explicit model must be available on an allowed runner and at `xhigh` or below. Provider aliases are verified at execution. `inherit-parent` and `auto` always pass. If a chosen real slug is not available, stop and ask again.
+Each explicit model must be available on its local Codex or Claude Code runner and at `xhigh` or below. Verify provider aliases at execution. `inherit-parent` and `auto` require a supported parent model. If a chosen model is unavailable, stop and ask again.
 
 ### 5. Write the rule
 
@@ -43,17 +43,17 @@ Write `.pstack/models.md` with a `# budget` line with the chosen label and the e
 
 ```
 # pstack model configuration. One line per role. Delete a line to fall back to the skill default.
-# `inherit-parent` or `auto` as a value: the role runs on the parent chat model (omit Task `model` and spawn `generalPurpose`). Alias entries in a panel list still count toward its fan-out.
+# `inherit-parent` or `auto` uses the supported parent chat model. Alias entries in a panel still count toward its size.
 # budget: large (xhigh)
-feature, refactoring: claude-opus-5-5-xhigh-fast
-bug-fix: claude-opus-5-5-xhigh-fast
-perf-issue: claude-opus-5-5-xhigh-fast
-hillclimb: claude-opus-5-5-xhigh-fast
-judgment and prose: claude-opus-5-5-xhigh-fast
-arena runners: claude-fable-5-2-high, claude-opus-5-5-high-fast, codex
-arena cross-judge pool: claude-opus-5-5-high-fast, codex
-swarm workers: claude-opus-5-5-high-fast
-interrogate reviewers: claude-fable-5-2-high, claude-opus-5-5-high-fast, codex
+feature, refactoring: opus (xhigh)
+bug-fix: opus (xhigh)
+perf-issue: opus (xhigh)
+hillclimb: opus (xhigh)
+judgment and prose: opus (xhigh)
+arena runners: fable (high), opus (high), codex
+arena cross-judge pool: opus (high), codex
+swarm workers: opus (high)
+interrogate reviewers: fable (high), opus (high), codex
 ```
 
 ### 6. Confirm

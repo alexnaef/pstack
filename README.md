@@ -1,8 +1,10 @@
-# Cursor plugins
+# pstack for Codex and Claude Code
+
+Start with the [pstack guide](pstack/docs/guide/) and its [local setup instructions](pstack/docs/guide/01-setup.md).
+
+## Upstream plugin catalog
 
 Official Cursor plugins for popular developer tools, frameworks, and SaaS products. Each plugin is a standalone directory at the repository root with its own `.cursor-plugin/plugin.json` manifest.
-
-## Plugins
 
 | `name` | Plugin | Author | Category | `description` (from marketplace) |
 |:-------|:-------|:-------|:---------|:-------------------------------------|

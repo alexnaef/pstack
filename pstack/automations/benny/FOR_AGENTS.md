@@ -70,8 +70,8 @@ if project-scoped plugins are unavailable or any shared dependency does not reso
 
 tell me that `.pstack/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. do not create or update an automation until i explicitly ask.
 
-for first-time creation, use the authorized host's automation tool for each workflow when it supports the trigger. preserve the draft review, approval, and readiness checks. if the host lacks the trigger, hand back both prompts for manual use.
+for first-time creation, use the authorized host's automation tool for each workflow when it supports the trigger and local execution. preserve the draft review, approval, and readiness checks. if the host lacks either capability, hand back both prompts for on-demand runs in Codex or Claude Code.
 
-paraphrase this intent and the finished configuration into each draft. the triage prompt must read and follow `.pstack/automations/benny/skills/triage-issue-reports/SKILL.md`. the repro prompt must read and follow `.pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md`. use these repo-relative paths only after `/automate` confirms they are committed in the repository where the automation will run.
+paraphrase this intent and the finished configuration into each draft. the triage prompt must read and follow `.pstack/automations/benny/skills/triage-issue-reports/SKILL.md`. the repro prompt must read and follow `.pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md`. verify that these files are committed in the repository where the automation will run.
 
 for existing automations, validate the configuration against the concise field checklist, then use the authorized host editor for the existing automation. do not create duplicates.
