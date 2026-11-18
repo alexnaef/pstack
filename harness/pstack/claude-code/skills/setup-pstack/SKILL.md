@@ -1,13 +1,15 @@
 ---
 name: setup-pstack
-description: Configure which models pstack uses per role and at what reasoning budget. Detects your available models and writes a project-local rule that overrides the skill defaults. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
+description: Configure which models pstack uses per role and at what reasoning budget. Detects your available models and writes a personal rule (`~/.pstack/models.md`, used in every project and worktree) that overrides the skill defaults. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
 ---
 
 # Setup pstack
 
 Read [Host tools](../../docs/harness/host-tools.md) for host and project mappings.
 
-Write `.pstack/models.md`, a project-local rule that sets pstack's model per role.
+Write the model rule that sets pstack's model per role. By default it goes to `~/.pstack/models.md`: personal, read in every project and worktree, never committed. A project's `.pstack/models.md`, when present, replaces it for that project; use one only for an intentional shared team config.
+
+Skills resolve the rule as the project's `.pstack/models.md` if it exists, otherwise `~/.pstack/models.md`, otherwise the defaults.
 
 ## Steps
 
@@ -17,7 +19,7 @@ Check the available model lists on local Codex and Claude Code runners. Use the 
 
 ### 2. Load current state
 
-The default role-to-model mapping is the rule shape shown in step 5 below. If `.pstack/models.md` already exists, read it and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults. A line whose role is not in step 5, such as `hardest tasks`, `architect runners`, `reflect tooling`, or `why investigators`, is from a retired role. Drop it.
+The default role-to-model mapping is the rule shape shown in step 5 below. If a model rule already exists (the project's `.pstack/models.md`, else `~/.pstack/models.md`), read it, say which file it came from, and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults. A line whose role is not in step 5, such as `hardest tasks`, `architect runners`, `reflect tooling`, or `why investigators`, is from a retired role. Drop it.
 
 Discard entries that use unsupported runners or model providers, and report them. Preserve supported per-role choices and effort settings, including `inherit-parent` and `auto` when supported. Convert an older model selector if the same model and effort are available under a native name. Use the active host's verified equivalent or inherit the session for an unavailable default. Show unavailable explicit choices for correction.
 
@@ -39,7 +41,9 @@ Each explicit model must be available on its local Codex or Claude Code runner a
 
 ### 5. Write the rule
 
-Write `.pstack/models.md` with a `# budget` line with the chosen label and the effort that label names, and one line per role, using the same labels poteto-mode uses. Overwrite the whole file so re-runs stay idempotent. Shape:
+Ask where to write it. Prefer AskQuestion. Offer `~/.pstack/models.md` first, as the recommended personal default. Offer the project's `.pstack/models.md` only as the alternative for a shared team config that will be committed. If the user picks the project file, warn that git worktrees contain only tracked files, so an uncommitted project rule is invisible in worktree sessions, and that it overrides each teammate's personal rule in this project. If a project `.pstack/models.md` exists and the user writes the personal rule, warn that the project file still wins in this project.
+
+Write the chosen file, creating its directory if needed, with a `# budget` line with the chosen label and the effort that label names, and one line per role, using the same labels poteto-mode uses. Overwrite the whole file so re-runs stay idempotent. Shape:
 
 ```
 # pstack model configuration. One line per role. Delete a line to fall back to the skill default.
@@ -58,7 +62,7 @@ interrogate reviewers: fable (high), opus (high), codex
 
 ### 6. Confirm
 
-Tell the user the rule was written and that it applies to new sessions. Re-running this skill updates it.
+Tell the user which file the rule was written to and that it applies to new sessions. Re-running this skill updates it.
 
 ### 7. Offer a verification skill (optional)
 
