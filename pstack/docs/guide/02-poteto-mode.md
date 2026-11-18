@@ -37,6 +37,8 @@ You don't write a spec. You say what's wrong or what you want, plus anything you
 
 That's a Bug fix prompt. "repro first" is a real constraint, not politeness, and the playbook honors it. Watch the todo list fill with the Bug fix steps.
 
+An ordinary fix ends with a verified local patch and the evidence from the run. Ask for a pull request if you want the agent to open one.
+
 ## What goes in a prompt
 
 A useful prompt carries up to five things, and each one fits in a sentence:
